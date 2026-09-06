@@ -5,7 +5,7 @@ EJERCICIO: INVERTIR PALABRAS
    asi que tendras que pedir memoria dinamica).
 
 2. Crea una funcion con esta firma:
-   char** split_and_reverse(char *frase, int *num_palabras);
+   char** split_and_reverse(char *frase, int *num_palabras); 
 
    Lo que tiene que hacer:
    - Recibe "frase" original.
@@ -36,7 +36,7 @@ REGLAS:
 #include <stdio.h>
 #include <stdlib.h>
 
-char **split_and_reverse(char *frase, int *num_palabras);
+char **split_and_reverse(char *frase, int *num_palabras); 
 
 int main(void) {
 	int buffer_size = 100;
