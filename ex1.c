@@ -82,4 +82,4 @@ char **split_and_reverse(char *frase, int *num_palabras) {
 	}
 	
 	return NULL;
-}
+}  
