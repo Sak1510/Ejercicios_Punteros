@@ -37,9 +37,9 @@ REGLAS:
 #include <stdlib.h>
 
 void *freep_error(char *str, void *p);
-const size_t strlen(char *str);
+const size_t _strlen(char *str);
 char **strsplit(char *str);
-char *strrev(char *str);
+char *_strrev(char *str);
 
 char **split_and_reverse(char *frase, int *num_palabras); 
 
@@ -70,7 +70,7 @@ int main(void) {
 	printf("[+] str_buffer = %s\n", str_buffer);
 	printf("num_palabras = %d\n", num_palabras);
 
-	char *strrev_p = strrev(str_buffer);
+	char *strrev_p = _strrev(str_buffer);
 	printf("\nstrrev(%s) = %s\n", str_buffer, strrev_p);
 
 	free(strrev_p);
@@ -119,7 +119,7 @@ void *freep_error(char *str, void *p) {
  * \param str String a procesar.
  * \returns Tamaño de la string contando '\0'. Si falla, retorna 0.
 */
-const size_t strlen(char *str) {
+const size_t _strlen(char *str) {
 	if(str == NULL) 
 		return 0;
 
@@ -143,7 +143,7 @@ char **strsplit(char *str) {
  * \param str String a procesar.
  * \returns La string volteada. Si falla, retorna NULL
  */
-char *strrev(char *str) {
+char *_strrev(char *str) {
 	if(str == NULL)
 		return NULL;
 
