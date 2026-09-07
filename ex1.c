@@ -37,12 +37,12 @@ REGLAS:
 #include <stdlib.h>
 
 void *freep_error(char *str, void *p);
-const size_t _strlen(char *str);
+size_t _strlen(char *str);
 char **strsplit(char *str);
 char *_strrev(char *str);
 
-char **split_and_reverse(char *frase, int *num_palabras); 
 
+char **split_and_reverse(char *frase, int *num_palabras); 
 int main(void) {
 	int buffer_size = 100;
 	char *str_buffer = (char *)malloc(sizeof(char) * buffer_size);
@@ -53,7 +53,7 @@ int main(void) {
 	}
 
 	printf("Frase: ");
-	str_buffer = fgets(str_buffer, buffer_size, stdin);
+	fgets(str_buffer, buffer_size, stdin);
 
 	if(str_buffer == NULL) {
 		printf("[!] Fallo fgets().");
@@ -73,25 +73,7 @@ int main(void) {
 	char *strrev_p = _strrev(str_buffer);
 	printf("\nstrrev(%s) = %s\n", str_buffer, strrev_p);
 
-	free(strrev_p);
-
-	// char **copy_split_buffer = split_buffer;
-	// for(int i = 0; i < num_palabras; i++) {
-	// 	if(i == 0) 
-	// 		printf("split = [");
-
-	// 	printf("\"%s\"", *copy_split_buffer);
-
-	// 	if(i == num_palabras - 1) 
-	// 		printf("]\n");
-	// 	else 
-	// 		printf(",");
-
-	// 	copy_split_buffer++;
-	// }
-
-
-	
+	free(strrev_p);	
 	free(split_buffer);
 	free(str_buffer);
 	return 0;
@@ -119,7 +101,7 @@ void *freep_error(char *str, void *p) {
  * \param str String a procesar.
  * \returns Tamaño de la string contando '\0'. Si falla, retorna 0.
 */
-const size_t _strlen(char *str) {
+size_t _strlen(char *str) {
 	if(str == NULL) 
 		return 0;
 
@@ -130,9 +112,14 @@ const size_t _strlen(char *str) {
 		str_copy++;
 	}
 
-	return strlen_++;
+	return ++strlen_;
 }
 
+
+/**
+ * Retorna un puntero que apunta a varios punteros que cada
+ * uno apunta a una string en especifico 
+*/
 char **strsplit(char *str) {
 	return NULL;
 }
@@ -147,21 +134,21 @@ char *_strrev(char *str) {
 	if(str == NULL)
 		return NULL;
 
+	// Reserva la memoria con malloc de la nueva frase
 	char *strrev_ = (char *)malloc(strlen(str) * sizeof(char));
 	if(strrev_ == NULL) 
 		return (char *)freep_error("[!] ERROR. malloc() fallo en strrev().\n", (void *)strrev_);
 
 	// Se inicia desde el ultimo espacio de memoria de strrev_
 	strrev_ += strlen(str);
-	(*strrev_) = '\0';
+	(*strrev_) = '\0'; 
 
+	// Guarda por cada espacio
 	char *str_copy = str;
 	while(*(str_copy + 1) != '\0') {
-		(*strrev_) = *str_copy;
-		strrev_--;
+		(*--strrev_) = *str_copy;
 		str_copy++;
 	}
-
 
 	return strrev_;
 }
@@ -171,60 +158,6 @@ char **split_and_reverse(char *frase, int *num_palabras) {
 	if(frase == NULL || num_palabras == NULL)
 		return NULL;
 
-	// Cuenta cuantas palabras hay dentro de la string
-	(*num_palabras) = 0;
-	char *frase_copy = frase;
-	size_t strlen = 0;
-	while(*(frase_copy + 1) != '\0') {
-		if(*frase_copy == ' ')
-			(*num_palabras)++;
 
-		frase_copy++;
-		strlen++;
-	} 	(*num_palabras)++;
-
-
-	// Se guarda el puntero de las strings separadas
-	char **str_split = (char **)malloc(sizeof(char *) * (*num_palabras));
-	if(str_split == NULL) // En caso de fallar el malloc()
-		return (char **)freep_error("[!] ERROR. malloc() fallo.\n", (void *)str_split);
-
-
-	// CASO ESPECIAL: num_palabras == 1
-	if(*num_palabras == 1) {
-		*str_split = (char *)malloc(sizeof(char) * strlen);
-		if(*str_split == NULL) // En caso de fallar el malloc()
-			return (char **)freep_error("[!] ERROR. malloc() fallo.\n", (void *)str_split);
-
-		frase_copy = frase;
-		while(*(frase_copy + 1) != '\0') {
-			(**str_split) = *frase_copy;
-			frase_copy++;
-		}
-
-		return str_split;
-	}
-
-
-	// // Se guarda una por una cada palabra
-	frase_copy = frase;
-	size_t num_letras = 0, index = 0, copy_index = 0;
-	while(*(frase_copy + 1) != '\0') {
-		if(*frase_copy == ' ') {
-			printf("BUCLE!!\n");
-
-			char *other_copy = frase + copy_index;
-			while(*other_copy != ' ' && *(other_copy + 1) != '\0') {
-				other_copy++;
-			}
-
-			copy_index = index;
-			num_letras = 0;
-		}
-		
-		index++;
-		frase_copy++;
-	}
-
-	return str_split;
+	return NULL;
 }
