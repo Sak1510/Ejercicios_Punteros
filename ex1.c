@@ -38,14 +38,14 @@ REGLAS:
 
 void *freep_error(char *str, void *p);
 size_t _strlen(char *str);
-char **strsplit(char *str);
+char **strsplit(char *str, int *words_count);
 char *_strrev(char *str);
 
 
 char **split_and_reverse(char *frase, int *num_palabras); 
 int main(void) {
-	int buffer_size = 100;
-	char *str_buffer = (char *)malloc(sizeof(char) * buffer_size);
+	size_t buffer_size_limit = 1000;
+	char *str_buffer = (char *)malloc(sizeof(char) * buffer_size_limit);
 	if(str_buffer == NULL) {
 		printf("[!] ERROR. malloc fallo.\n");
 		free(str_buffer);
@@ -53,36 +53,29 @@ int main(void) {
 	}
 
 	printf("Frase: ");
-	fgets(str_buffer, buffer_size, stdin);
-
+	fgets(str_buffer, buffer_size_limit, stdin);
 	if(str_buffer == NULL) {
 		printf("[!] Fallo fgets().");
 		exit(1);
 	}
 
 
-	// Funcion que voltea las palabras
-	int num_palabras = 0;
-	char **split_buffer = split_and_reverse(str_buffer, &num_palabras);
-
-
 	// 	========	PRUEBAS		========
+	int num_palabras = 0;
+	char **str_split = strsplit(str_buffer, &num_palabras);
 	printf("[+] str_buffer = %s\n", str_buffer);
 	printf("num_palabras = %d\n", num_palabras);
 
-	char *strrev_p = _strrev(str_buffer);
-	printf("\nstrrev(%s) = %s\n", str_buffer, strrev_p);
 
-	free(strrev_p);	
-	free(split_buffer);
+	free(str_split);
 	free(str_buffer);
 	return 0;
 }
 
 
 /**
- * Llamar en caso de fallar malloc() dentro de una función. Libera la memoria del puntero
- * el cual se procesa.
+ * Llamar en caso de fallar malloc() dentro de una función. 
+ * Libera la memoria del puntero el cual se procesa y se le asigna el valor NULL.
  * \param str String a imprimir por el error.
  * \param p Puntero para liberar. 
  * \returns NULL
@@ -92,7 +85,7 @@ void *freep_error(char *str, void *p) {
 		printf("%s\n", str);
 	
 	free(p);
-	return NULL;	
+	return p = NULL;
 }
 
 
@@ -120,8 +113,70 @@ size_t _strlen(char *str) {
  * Retorna un puntero que apunta a varios punteros que cada
  * uno apunta a una string en especifico 
 */
-char **strsplit(char *str) {
-	return NULL;
+char **strsplit(char *str, int *words_count) {
+	/** Algoritmo de la función
+	    1. Verificar si str != NULL
+	    2. Limpiar eapacios repetidos, de inicio y final en caso de existir
+	    3. Contar cuantas palabras hay en la frase contando espacios
+	    4. Reservar la memoria para cada palabra
+	    5. Copiar denteo de cada casilla su respectiva palabra 
+	*/
+
+	// Si str esta vacio, retorna NULL 
+	if(str == NULL)
+		return NULL;
+
+	// Se reserva la memoria necesaria para la string limpia de espacios repetidos
+	char *str_clean = (char *)malloc(sizeof(char) * _strlen(str));
+	char *memory_str_clean = str_clean;
+	if(str_clean == NULL) 
+		return (char **)freep_error("[!] ERROR. malloc() fallo en strrev().\n", str_clean);
+
+	// Eleminar espacios repetidos al inicio de la string
+	char *str_copy = str;
+	while(*str_copy == ' ') 
+		str_copy++;
+
+	// Si se identifica que el ultimo caracter es '\0',
+	// se libera el espacio de memoria reservado y se termina la función
+	if(*str_copy == '\0') {
+		free(str_clean);
+		return NULL;
+	}
+
+	// Se evitan los espacios repetidos dentro de la string entre palabras
+	// y cuenta al mismo tiempo, cuantas palabras hay dentro de la string
+	(*words_count) = 0;
+	while(*(str_copy + 1) != '\0') {
+		if(!(*str_copy == ' ' && *(str_copy + 1) == ' ')) {
+			(*str_clean++) = *str_copy;
+
+			if(*str_copy == ' ')
+				(*words_count)++;
+		}
+
+		str_copy++;
+	}
+
+	// En caso de que el ultimo caracter guardado, sea un espacio, se descarta
+	if(*(--str_clean) == ' ') {
+		(*str_clean) = '\0';
+		(*words_count)--;
+	} else // Se hace que el ultimo caracter de la string sea \0 para cerrar
+		(*++str_clean) = '\0';
+
+	// Se vuelve a la memoria de inicio
+	str_clean = memory_str_clean;
+
+	// Se cuenta una palabra más
+	(*words_count)++;
+
+	printf("\t [*] \"%s\"\t => \"%s\"\n", str, str_clean);
+
+	// Cuenta cuantas palabras hay dentro de str
+
+	char **strsplit_ = NULL;
+	return strsplit_;
 }
 
 
@@ -131,6 +186,7 @@ char **strsplit(char *str) {
  * \returns La string volteada. Si falla, retorna NULL
  */
 char *_strrev(char *str) {
+	// Si str esta vacio, retorna NULL
 	if(str == NULL)
 		return NULL;
 
