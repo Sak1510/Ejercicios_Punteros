@@ -59,18 +59,33 @@ int main(void) {
 	}
 
 
-
 	// 	========	PRUEBAS		========
+	printf("\n[+] str_buffer = %s\n", str_buffer);
+
 	int num_palabras = 0;
 	char **str_split = strsplit(str_buffer, &num_palabras);
-	printf("[+] str_buffer = %s\n", str_buffer);
-	printf("num_palabras = %d\n", num_palabras);
+	printf("[+] num_palabras = %d\n", num_palabras);
 
+	char *str_rev = _strrev(str_buffer);
+	if(str_rev == NULL) {
+		printf("[!] Fallo _strrev().\n");
+		free(str_split);
+		free(str_buffer);
+		return -1;
+	}
 
+	printf("[+] str_rev = %s\n", str_rev);
+
+	// Se libera toda la memoria
+	free(str_rev);
 	free(str_split);
 	free(str_buffer);
+
+	printf("[!] Fin del programa\n");
 	return 0;
 }
+
+
 
 
 /**
@@ -100,12 +115,10 @@ size_t _strlen(char *str) {
 
 	char *str_copy = str;
 	size_t strlen_ = 0;
-	while(*(str_copy + 1) != '\0') {
+	while(*str_copy++ != '\0')
 		strlen_++;
-		str_copy++;
-	}
 
-	return ++strlen_;
+	return strlen_;
 }
 
 
@@ -130,7 +143,7 @@ char **strsplit(char *str, int *words_count) {
 	char *str_clean = (char *)malloc(sizeof(char) * _strlen(str));
 	char *memory_str_clean = str_clean;
 	if(str_clean == NULL) 
-		return (char **)freep_error("[!] ERROR. malloc() fallo en strrev().\n", str_clean);
+		return (char **)freep_error("[!] ERROR. malloc() fallo en _strrev().\n", str_clean);
 
 	// Eleminar espacios repetidos al inicio de la string
 	char *str_copy = str;
@@ -173,6 +186,7 @@ char **strsplit(char *str, int *words_count) {
 
 	printf("\t [*] \"%s\"\t => \"%s\"\n", str, str_clean);
 
+
 	// Cuenta cuantas palabras hay dentro de str
 
 	char **strsplit_ = NULL;
@@ -191,13 +205,13 @@ char *_strrev(char *str) {
 		return NULL;
 
 	// Reserva la memoria con malloc de la nueva frase
-	char *strrev_ = (char *)malloc(strlen(str) * sizeof(char));
-	if(strrev_ == NULL) 
+	char *strrev_ = (char *)malloc(_strlen(str) * sizeof(char));
+	if(strrev_ == NULL)
 		return (char *)freep_error("[!] ERROR. malloc() fallo en strrev().\n", (void *)strrev_);
 
 	// Se inicia desde el ultimo espacio de memoria de strrev_
-	strrev_ += strlen(str);
-	(*strrev_) = '\0'; 
+	strrev_ += _strlen(str) - 1;
+	(*strrev_) = '\0';
 
 	// Guarda por cada espacio
 	char *str_copy = str;
