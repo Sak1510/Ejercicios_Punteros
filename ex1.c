@@ -44,20 +44,20 @@ char *_strrev(char *str);
 
 char **split_and_reverse(char *frase, int *num_palabras); 
 int main(void) {
-	size_t buffer_size_limit = 1000;
-	char *str_buffer = (char *)malloc(sizeof(char) * buffer_size_limit);
+	size_t buffer_size = 1024;
+	char *str_buffer = (char *)malloc(sizeof(char) * buffer_size);
 	if(str_buffer == NULL) {
 		printf("[!] ERROR. malloc fallo.\n");
-		free(str_buffer);
-		exit(1);
+		return -1;
 	}
 
 	printf("Frase: ");
-	fgets(str_buffer, buffer_size_limit, stdin);
-	if(str_buffer == NULL) {
+	if(fgets(str_buffer, buffer_size, stdin) == NULL) {
 		printf("[!] Fallo fgets().");
-		exit(1);
+		free(str_buffer);
+		return -1;
 	}
+
 
 
 	// 	========	PRUEBAS		========
